@@ -1,15 +1,35 @@
-# Norton's Customer Tracker
+#Customer Tracker
 
 Two pieces:
 
-(1) client: a static React app which communicates to its server to store and manipulate customer records.
-(2) server: Node/Express app with hooks to MongoDB backend.
+* (1) client: a static React app which communicates to its server to store and manipulate customer/company records.  Extremely primitive UI just to prove the concept!
 
-You will need to update config.env in the /config directory, using config.env_DEFAULT as a guide.
+* (2) server: Node/Express app with hooks to MySQL backend using Sequelize.
 
-Once you have built the React client in the client directory with 'npm build', you can switch the NODE_ENV from 'development' to 'production', which will cause the server to use the /client/build/index.html for static page delivery (which means you only need to start the server, not the client).
+You will need to update *.env* and *config.json* in the /config directory, using config.env_DEFAULT as a guide.
 
-The client project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).  Many thanks to Brad Traversy for many ideas! 
+
+### To seed the database:
+```
+node seed
+```
+
+### To start in dev mode:
+```
+npm run dev
+```
+This will use concurrently to start both the server and front-end client.  The React front-end will proxy requests on the default port (3000 or whatever you choose) the the back-end APIs (port 5000 or whatever you choose).
+
+### To start in production mode:
+
+Once you have built the React client in the client directory with 'npm build', you can switch the NODE_ENV from *'development'* to *'production'*, which will cause the server to use the /client/build/index.html for static page delivery (which means you only need to start the server, not the client).  So you can just run:
+```
+npm run start
+```
+
+@author Dave Norton 2022
+
+The client project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
