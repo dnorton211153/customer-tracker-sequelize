@@ -1,0 +1,3 @@
+.noClick, svg {
+    pointer-events: none !important;
+}
