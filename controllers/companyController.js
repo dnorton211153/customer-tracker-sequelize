@@ -30,7 +30,18 @@ exports.addCompany = async (req,res,next) => {
 exports.getCompanies = async (req,res,next) => {
 
     try {
-        const companies = await Company.findAll({});
+        const companies = await Company.findAll({
+            include: [
+              {
+                model: Customer,
+                as: "customers",
+                attributes: ["id", "firstName", "lastName", "email"],
+                through: {
+                  attributes: [],
+                }
+              },
+            ],
+          });
         return res.status(200).json({
             success: true,
             count: companies.length,
@@ -41,6 +52,38 @@ exports.getCompanies = async (req,res,next) => {
             success: false,
             error: err.message
         })
+    }
+}
+
+exports.getCompanyById = async (req,res,next) => {
+    try {
+        const company = await Company.findByPk(req.params.id, {
+            include: [
+              {
+                model: Customer,
+                as: "customers",
+                attributes: ["id", "firstName", "lastName", "email"],
+                through: {
+                  attributes: [],
+                }
+              },
+            ],
+          });
+        if (!company) {
+            return res.status(404).json({
+                success: false,
+                error: 'No company found'
+            })
+        } else {
+
+            return res.status(200).json(company);
+        }
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: 'Server error'
+        })        
     }
 }
 
@@ -97,35 +140,35 @@ exports.updateCompany = async (req,res,next) => {
     }
 }
 
-// // link company to customer
-// exports.linkCompanyToCustomer = async (req,res,next) => {
-//     try {
-//         const company = await Company.findByPk(req.params.company_id);
-//         if (!company) {
-//             return res.status(404).json({
-//                 success: false,
-//                 error: 'No company found'
-//             })
-//         } else {
-//             const customer = await Customer.findByPk(req.params.customer_id);
-//             if (!customer) {
-//                 return res.status(404).json({
-//                     success: false,
-//                     error: 'No customer found'
-//                 })
-//             } else {
-//                 await company.addCustomer(customer);
-//                 return res.status(200).json({
-//                     success: true,
-//                     data: company
-//                 })
-//             }
-//         }
+// link company to customer
+exports.linkCompanyToCustomer = async (req,res,next) => {
+    try {
+        const company = await Company.findByPk(req.body.company_id);
+        if (!company) {
+            return res.status(404).json({
+                success: false,
+                error: 'No company found'
+            })
+        } else {
+            const customer = await Customer.findByPk(req.body.customer_id);
+            if (!customer) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'No customer found'
+                })
+            } else {
+                await company.addCustomer(customer);
+                return res.status(200).json({
+                    success: true,
+                    data: company
+                })
+            }
+        }
 
-//     } catch (err) {
-//         return res.status(500).json({
-//             success: false,
-//             error: 'Server error'
-//         })        
-//     }
-// }
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: 'Server error'
+        })        
+    }
+}

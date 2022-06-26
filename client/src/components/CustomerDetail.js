@@ -33,6 +33,10 @@ export const CustomerDetail = () => {
     stateAction('SET_ACTIVE_CUSTOMER',{ id: -1, firstName: '', lastName: '', email: ''});
   }
 
+  const linkCompanyToCustomer = () => {
+    stateAction('LINK_COMPANY_TO_CUSTOMER');
+  }
+
   return (
 
     <div className="col-6 align-items-center justify-content-center px-2">
@@ -76,6 +80,7 @@ export const CustomerDetail = () => {
             <div className="col-12">
               <button className="btn btn-danger" onClick={clearForm}>New</button>
               <button className="btn btn-primary" type="submit">Save</button>
+              <button className="btn btn-primary" onClick={linkCompanyToCustomer}>Link</button>
             </div>
           </form>
         </div>

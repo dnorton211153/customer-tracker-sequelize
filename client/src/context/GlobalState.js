@@ -83,6 +83,14 @@ export const GlobalProvider = ({ children }) => {
                 case 'SET_ACTIVE_COMPANY':
                     payload = incoming;
                     break;
+
+                case 'LINK_COMPANY_TO_CUSTOMER':
+                    response = await axios.post(`/api/companies/link`, { company_id: state.activeCompany.id, customer_id: state.activeCustomer.id }, config);
+                    break;
+
+                default:
+                    break;
+
             }
             
             dispatch({

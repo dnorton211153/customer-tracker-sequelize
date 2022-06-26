@@ -74,7 +74,11 @@ export default (state, action) => {
                 ...state,
                 error: action.payload
             }
-        
+    
+        case 'LINK_COMPANY_TO_CUSTOMER':
+            
+
+
         default:
             return state;
     }

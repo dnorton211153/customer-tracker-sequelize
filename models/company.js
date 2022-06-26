@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Company.belongsToMany(models.Customer, {
         through: "company_customer",
-        as: "customer",
+        as: "customers",
         foreignKey: "company_id",
       });
     }

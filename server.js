@@ -8,14 +8,6 @@ const seed = require('./seeders/index');
 
 dotenv.config({ path: './config/.env'});
 
-const run = async () => {
-    await db.initialize();
-    await db.sequelize.sync({ force: true });
-    await seed();
-}
-
-run();
-
 const customerRoutes = require('./routes/customerRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 

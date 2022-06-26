@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import { Header } from './components/Header';
 import { CustomerDetail } from './components/CustomerDetail'
 import { CustomerList } from './components/CustomerList'
 import { CompanyDetail } from './components/CompanyDetail'
 import { CompanyList } from './components/CompanyList'
-import { GlobalProvider, GlobalContext } from './context/GlobalState'
+import { GlobalProvider } from './context/GlobalState'
 
 function App() {
 
