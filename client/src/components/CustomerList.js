@@ -1,12 +1,12 @@
 import React, {useContext, useEffect} from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
-export const List = () => {
+export const CustomerList = () => {
 
-  const {customers, getCustomersAction, deleteCustomerAction, setActiveCustomer} = useContext(GlobalContext);
+  const {customers, stateAction } = useContext(GlobalContext);
 
   const editCustomer = (customer) => {
-    setActiveCustomer(customer);
+    stateAction('SET_ACTIVE_CUSTOMER', customer);
   }
 
   const emailCustomer = (customer) => {
@@ -15,12 +15,12 @@ export const List = () => {
 
   const deleteCustomer = (id) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
-        deleteCustomerAction(id);
+        stateAction('DELETE_CUSTOMER', id);
     }
   }
 
   useEffect(() => {
-    getCustomersAction();
+    stateAction('GET_CUSTOMERS', null);
     // Handle infinite loop (???)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -29,6 +29,7 @@ export const List = () => {
     <div className="col-6 align-items-center px-2">
       <h3 className="text-center">List:</h3>
 
+        <label htmlFor="firstName" className="form-label">Customer List</label>
         <div className="list-group">
           {customers.map(customer => ( 
 

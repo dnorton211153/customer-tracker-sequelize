@@ -9,12 +9,12 @@ import axios from 'axios'
 
 // Initial state (customers would need to be loaded from the DB source)
 const initialState = {
-    activeCustomer: { id: -1, firstName: '', lastName: '', email: ''},
+    activeCustomer: { id: -1, firstName: '', lastName: '', email: '' },
+    activeCompany: { id: -1, name: '' },
     customers: [],
+    companies: [],
     loading: true
 }
-
-
 
 // Create context:
 export const GlobalContext = createContext(initialState);
@@ -23,39 +23,10 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
-    // global actions (calls to reducer):
-    const getCustomersAction = async () => {
-        try {
-            const res = await axios.get('/api/customers');
-            dispatch({
-                type: 'GET_CUSTOMERS',
-                payload: res.data.data
-            }) 
-
-        } catch (err) {
-            dispatch({
-                type: 'CUSTOMER_ERROR',
-                payload: err.response.data.error
-            }) 
-        }
-    }
-    
-    const deleteCustomerAction = async (id) => {
-        try {
-            await axios.delete(`/api/customers/${id}`)
-            dispatch({
-                type: 'DELETE_CUSTOMER',
-                payload: id
-            })
-        } catch (err) {
-            dispatch({
-                type: 'CUSTOMER_ERROR',
-                payload: err.response.data.error
-            }) 
-        }
-    }
-
-    const addCustomerAction = async (customer) => {
+    const stateAction = async (type, incoming) => {
+        
+        var response = null;
+        var payload = null;
 
         const config = {
             headers: {
@@ -64,60 +35,80 @@ export const GlobalProvider = ({ children }) => {
         }
 
         try {
-            const res = await axios.post('/api/customers', customer, config)
-            dispatch({
-                type: 'ADD_CUSTOMER',
-                payload: res.data.data
-            })
-        } catch (err) {
-            dispatch({
-                type: 'CUSTOMER_ERROR',
-                payload: err.response.data.error
-            }) 
-        }
+            switch (type) {
+                case 'GET_CUSTOMERS':
+                    response = await axios.get('/api/customers');
+                    payload = response.data.data;
+                    break;
 
+                case 'DELETE_CUSTOMER':
+                    await axios.delete(`/api/customers/${incoming}`)
+                    payload = incoming;
+                    break;  
 
-    }
+                case 'ADD_CUSTOMER':
+                    response = await axios.post('/api/customers', incoming, config);
+                    payload = response.data.data;
+                    break;
 
-    const updateCustomerAction = async (customer) => {
+                case 'UPDATE_CUSTOMER':
+                    response = await axios.post(`/api/customers/${incoming.id}`, incoming, config);
+                    payload = response.data.data;
+                    break;
 
-        const config = {
-            headers: {
-                'Content-type': 'application/json'
+                case 'SET_ACTIVE_CUSTOMER':
+                    payload = incoming;
+                    break;
+            
+                case 'GET_COMPANIES':
+                    response = await axios.get('/api/companies');
+                    payload = response.data.data;
+                    break;
+
+                case 'DELETE_COMPANY':
+                    await axios.delete(`/api/companies/${incoming}`)
+                    payload = incoming;
+                    break;  
+
+                case 'ADD_COMPANY':
+                    response = await axios.post('/api/companies', incoming, config);
+                    payload = response.data.data;
+                    break;
+
+                case 'UPDATE_COMPANY':
+                    response = await axios.post(`/api/companies/${incoming.id}`, incoming, config);
+                    payload = response.data.data;
+                    break;
+
+                case 'SET_ACTIVE_COMPANY':
+                    payload = incoming;
+                    break;
             }
-        }
-
-        try {
-            const res = await axios.post(`/api/customers/${customer.id}`, customer, config)
+            
             dispatch({
-                type: 'UPDATE_CUSTOMER',
-                payload: res.data.data
-            })
-        } catch (err) {
-            dispatch({
-                type: 'CUSTOMER_ERROR',
-                payload: err.response.data.error
+                type,
+                payload
             }) 
+            
+        } catch (error) {
+            dispatch({
+                type: 'API_ERROR',
+                payload: error.response.data.error
+            })  
         }
     }
 
-    const setActiveCustomer = (customer) => {
-        dispatch({
-            type: 'SET_ACTIVE_CUSTOMER',
-            payload: customer
-        })
-    }
+
+
 
     return (<GlobalContext.Provider value={{
         customers: state.customers,
+        companies: state.companies,
         activeCustomer: state.activeCustomer,
+        activeCompany: state.activeCompany,
         error: state.error,
         loading: state.loading,
-        getCustomersAction,
-        deleteCustomerAction,
-        addCustomerAction,
-        updateCustomerAction,
-        setActiveCustomer
+        stateAction
     }}>
         {children}
     </GlobalContext.Provider>);

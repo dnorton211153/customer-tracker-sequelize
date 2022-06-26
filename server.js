@@ -17,6 +17,7 @@ const run = async () => {
 run();
 
 const customerRoutes = require('./routes/customerRoutes');
+const companyRoutes = require('./routes/companyRoutes');
 
 const app = express();
 app.use(express.json());  // body parser
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 app.use('/api/customers', customerRoutes);
+app.use('/api/companies', companyRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));

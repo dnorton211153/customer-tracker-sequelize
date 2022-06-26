@@ -1,13 +1,13 @@
 import React, {useContext} from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
-export const Detail = () => {
+export const CustomerDetail = () => {
 
-  const {activeCustomer, setActiveCustomer, addCustomerAction, updateCustomerAction} = useContext(GlobalContext);
+  const {activeCustomer, stateAction} = useContext(GlobalContext);
   const {id,firstName,lastName,email} = activeCustomer;
 
   const setParam = (param, value) => {
-    setActiveCustomer({
+    stateAction('SET_ACTIVE_CUSTOMER',{
       ...activeCustomer,
       [param]: value
     })
@@ -22,15 +22,15 @@ export const Detail = () => {
     if (activeCustomer.id === -1) {
       let copy = JSON.parse(JSON.stringify(activeCustomer));
       delete copy.id;
-      addCustomerAction(copy);
+      stateAction('ADD_CUSTOMER', copy);
     } else {
-      updateCustomerAction(activeCustomer);
+      stateAction('UPDATE_CUSTOMER', activeCustomer);
     }
   }
 
   const clearForm = (event) => {
     event.preventDefault();
-    setActiveCustomer({ id: -1, firstName: '', lastName: '', email: ''});
+    stateAction('SET_ACTIVE_CUSTOMER',{ id: -1, firstName: '', lastName: '', email: ''});
   }
 
   return (

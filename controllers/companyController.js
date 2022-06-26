@@ -1,15 +1,15 @@
 
 const { Customer, Company } = require('../models');
 
-// create new customer
-exports.addCustomer = async (req,res,next) => {
+// create new company
+exports.addCompany = async (req,res,next) => {
     
     try {
-        const { firstName, lastName, email } = req.body;
-        const customer = await Customer.create(req.body);
+        const { name } = req.body;
+        const company = await Company.create(req.body);
         return res.status(201).json({
             success: true,
-            data: customer
+            data: company
         });
     } catch (err) {
         if (err.name == 'ValidationError') {
@@ -27,14 +27,14 @@ exports.addCustomer = async (req,res,next) => {
     }
 }
 
-exports.getCustomers = async (req,res,next) => {
+exports.getCompanies = async (req,res,next) => {
 
     try {
-        const customers = await Customer.findAll({});
+        const companies = await Company.findAll({});
         return res.status(200).json({
             success: true,
-            count: customers.length,
-            data: customers
+            count: companies.length,
+            data: companies
         })
     } catch (err) {
         return res.status(500).json({
@@ -44,16 +44,16 @@ exports.getCustomers = async (req,res,next) => {
     }
 }
 
-exports.deleteCustomer = async (req,res,next) => {
+exports.deleteCompany = async (req,res,next) => {
     try {
-        const customer = await Customer.findByPk(req.params.id);
-        if (!customer) {
+        const company = await Company.findByPk(req.params.id);
+        if (!company) {
             return res.status(404).json({
                 success: false,
-                error: 'No customer found'
+                error: 'No company found'
             })
         } else {
-            await customer.destroy();
+            await company.destroy();
             return res.status(200).json({
                 success: true,
                 data: {}
@@ -68,24 +68,24 @@ exports.deleteCustomer = async (req,res,next) => {
     }
 }
 
-exports.updateCustomer = async (req,res,next) => {
+exports.updateCompany = async (req,res,next) => {
     try {
-        const customer = await Customer.findByPk(req.params.id);
-        if (!customer) {
+        const company = await Company.findByPk(req.params.id);
+        if (!company) {
             return res.status(404).json({
                 success: false,
-                error: 'No customer found'
+                error: 'No company found'
             })
         } else {
 
             Object.entries(req.body).forEach(([key,value]) => {
-                customer[key] = value;
+                company[key] = value;
             })
 
-            await customer.save();
+            await company.save();
             return res.status(200).json({
                 success: true,
-                data: customer
+                data: company
             })
         }
 
@@ -97,27 +97,27 @@ exports.updateCustomer = async (req,res,next) => {
     }
 }
 
-// // link customer to company
-// exports.linkCustomerToCompany = async (req,res,next) => {
+// // link company to customer
+// exports.linkCompanyToCustomer = async (req,res,next) => {
 //     try {
-//         const customer = await Customer.findByPk(req.params.customer_id);
-//         if (!customer) {
+//         const company = await Company.findByPk(req.params.company_id);
+//         if (!company) {
 //             return res.status(404).json({
 //                 success: false,
-//                 error: 'No customer found'
+//                 error: 'No company found'
 //             })
 //         } else {
-//             const company = await Company.findByPk(req.params.company_id);
-//             if (!company) {
+//             const customer = await Customer.findByPk(req.params.customer_id);
+//             if (!customer) {
 //                 return res.status(404).json({
 //                     success: false,
-//                     error: 'No company found'
+//                     error: 'No customer found'
 //                 })
 //             } else {
-//                 await customer.setCompany(company);
+//                 await company.addCustomer(customer);
 //                 return res.status(200).json({
 //                     success: true,
-//                     data: customer
+//                     data: company
 //                 })
 //             }
 //         }
