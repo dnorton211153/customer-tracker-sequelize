@@ -9,7 +9,7 @@ import axios from 'axios'
 
 // Initial state (customers would need to be loaded from the DB source)
 const initialState = {
-    activeCustomer: { _id: -1, firstName: '', lastName: '', email: ''},
+    activeCustomer: { id: -1, firstName: '', lastName: '', email: ''},
     customers: [],
     loading: true
 }
@@ -88,7 +88,7 @@ export const GlobalProvider = ({ children }) => {
         }
 
         try {
-            const res = await axios.post(`/api/customers/${customer._id}`, customer, config)
+            const res = await axios.post(`/api/customers/${customer.id}`, customer, config)
             dispatch({
                 type: 'UPDATE_CUSTOMER',
                 payload: res.data.data

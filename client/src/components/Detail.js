@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 export const Detail = () => {
 
   const {activeCustomer, setActiveCustomer, addCustomerAction, updateCustomerAction} = useContext(GlobalContext);
-  const {_id,firstName,lastName,email} = activeCustomer;
+  const {id,firstName,lastName,email} = activeCustomer;
 
   const setParam = (param, value) => {
     setActiveCustomer({
@@ -16,12 +16,12 @@ export const Detail = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // If the _id (in the '#id' element) is -1, submit new customer;
+    // If the id (in the '#id' element) is -1, submit new customer;
     // else update customer.
 
-    if (activeCustomer._id === -1) {
+    if (activeCustomer.id === -1) {
       let copy = JSON.parse(JSON.stringify(activeCustomer));
-      delete copy._id;
+      delete copy.id;
       addCustomerAction(copy);
     } else {
       updateCustomerAction(activeCustomer);
@@ -30,7 +30,7 @@ export const Detail = () => {
 
   const clearForm = (event) => {
     event.preventDefault();
-    setActiveCustomer({ _id: -1, firstName: '', lastName: '', email: ''});
+    setActiveCustomer({ id: -1, firstName: '', lastName: '', email: ''});
   }
 
   return (
@@ -40,7 +40,7 @@ export const Detail = () => {
         <div>
           <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate>
 
-            <input type="hidden" id="id" name="id" value={_id}/>
+            <input type="hidden" id="id" name="id" value={id}/>
             <div className="col-md-4">
               <label htmlFor="firstName" className="form-label">First Name</label>
               <input type="text" className="form-control" id="firstName" value={firstName} onChange={(e) => setParam('firstName', e.target.value)} required />

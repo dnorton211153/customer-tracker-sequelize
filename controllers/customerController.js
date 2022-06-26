@@ -1,7 +1,5 @@
 
-const models = require('../models');
-const Customer = models.customer;
-const Company = models.company;
+const { Customer, Company } = require('../models');
 
 // create new customer
 exports.addCustomer = async (req,res,next) => {

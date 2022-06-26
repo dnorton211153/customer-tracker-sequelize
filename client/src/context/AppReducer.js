@@ -18,12 +18,12 @@ export default (state, action) => {
         case 'DELETE_CUSTOMER':
             return {
                 ...state,
-                customers: state.customers.filter(customer => customer._id !== action.payload)
+                customers: state.customers.filter(customer => customer.id !== action.payload)
             }
 
         case 'UPDATE_CUSTOMER':
 
-            var customers = state.customers.map(u => u._id !== action.payload._id ? u : action.payload);
+            var customers = state.customers.map(u => u.id !== action.payload.id ? u : action.payload);
             return {
                 ...state,
                 customers
