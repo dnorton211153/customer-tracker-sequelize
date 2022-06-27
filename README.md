@@ -1,12 +1,17 @@
 # Customer Tracker
 
+The major focus here was Many-to-Many associations between Customers and Companies, using the [Sequelize](https://sequelize.org/) ORM.
+
+The idea is that you can use the client to add new customers and companies, then use the "link" button to link the selected company and customer together.
+
 Two pieces:
 
-* (1) client: a static React app which communicates to its server to store and manipulate customer/company records.  Extremely primitive UI just to prove the concept!
+* (1) client: single-page React app (using the context API for state management), which communicates to its server to store and manipulate customer/company records.  Extremely basic UI just to prove the concept!  
 
-* (2) server: Node/Express app with hooks to MySQL backend using Sequelize.
+* (2) server: Node/Express app with hooks to MySQL backend using Sequelize, and a REST API for interacting with the database.
 
 You will need to update *.env* and *config.json* in the /config directory, using config.env_DEFAULT as a guide.
+
 
 
 ### To seed the database:
