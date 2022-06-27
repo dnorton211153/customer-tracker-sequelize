@@ -23,12 +23,14 @@ export default (state, action) => {
 
         case 'UPDATE_CUSTOMER':
 
-            var customers = state.customers.map(u => u.id !== action.payload.id ? u : action.payload);
+            var customers = state.customers.map(u => u.id !== action.payload.id ? u : 
+                { ...u, ...action.payload });
             return {
                 ...state,
                 customers
             }
 
+        case 'RESET_ACTIVE_CUSTOMER':
         case 'SET_ACTIVE_CUSTOMER':
             return {
                 ...state,
@@ -57,12 +59,14 @@ export default (state, action) => {
 
         case 'UPDATE_COMPANY':
 
-            var companies = state.companies.map(u => u.id !== action.payload.id ? u : action.payload);
+            var companies = state.companies.map(u => u.id !== action.payload.id ? u : 
+                { ...u, ...action.payload });
             return {
                 ...state,
                 companies
             }
 
+        case 'RESET_ACTIVE_COMPANY':
         case 'SET_ACTIVE_COMPANY':
             return {
                 ...state,
@@ -75,9 +79,22 @@ export default (state, action) => {
                 error: action.payload
             }
     
-        case 'LINK_COMPANY_TO_CUSTOMER':
             
-
+        case 'LINK_COMPANY_TO_CUSTOMER':
+            // Rather than forcing full refresh of data from the server, we'll just update local state...
+            return {
+                ...state,
+                companies: state.companies.map(company => company.id === action.payload.activeCompany.id ? { ...company, customers: [...company.customers || [], action.payload.activeCustomer] } : company),
+                customers: state.customers.map(customer => customer.id === action.payload.activeCustomer.id ? { ...customer, companies: [...customer.companies || [], action.payload.activeCompany] } : customer),
+                activeCompany: {
+                    ...state.activeCompany,
+                    customers: [...state.activeCompany.customers || [], action.payload.activeCustomer],
+                },
+                activeCustomer: {
+                    ...state.activeCustomer,
+                    companies: [...state.activeCustomer.companies || [], action.payload.activeCompany],
+                }
+            }
 
         default:
             return state;

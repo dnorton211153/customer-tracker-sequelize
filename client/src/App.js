@@ -5,22 +5,32 @@ import { CustomerList } from './components/CustomerList'
 import { CompanyDetail } from './components/CompanyDetail'
 import { CompanyList } from './components/CompanyList'
 import { GlobalProvider } from './context/GlobalState'
+import { Col, Container, Row } from 'react-bootstrap';
 
 function App() {
 
   return (
     <GlobalProvider>
-    <div className="App d-flex flex-column justify-content-center align-items-center mt-4">
+    <Container>
       <Header />
-      <div className='d-flex flex-row'>
-        <CustomerDetail />
+      <Row>
+        <Col xs={5}>
         <CustomerList />
-      </div>
-      <div className='d-flex flex-row'>
-        <CompanyDetail />
+        </Col>
+        <Col xs={7}>
+        <CustomerDetail />
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <Col xs={5}>
         <CompanyList />
-      </div>
-    </div>
+        </Col>
+        <Col xs={7}>
+        <CompanyDetail />
+        </Col>
+      </Row>
+    </Container>
     </GlobalProvider>
   );
 }

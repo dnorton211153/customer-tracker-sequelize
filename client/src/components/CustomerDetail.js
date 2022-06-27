@@ -1,89 +1,109 @@
-import React, {useContext} from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalState";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { BsLink45Deg, BsTrash } from "react-icons/bs";
+import { FaSave } from "react-icons/fa";
+
 
 export const CustomerDetail = () => {
-
-  const {activeCustomer, stateAction} = useContext(GlobalContext);
-  const {id,firstName,lastName,email} = activeCustomer;
+  const { activeCustomer, stateAction } = useContext(GlobalContext);
+  const { id, firstName, lastName, email } = activeCustomer;
 
   const setParam = (param, value) => {
-    stateAction('SET_ACTIVE_CUSTOMER',{
+    stateAction("SET_ACTIVE_CUSTOMER", {
       ...activeCustomer,
-      [param]: value
-    })
-  }
-  
+      [param]: value,
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     // If the id (in the '#id' element) is -1, submit new customer;
     // else update customer.
-
     if (activeCustomer.id === -1) {
       let copy = JSON.parse(JSON.stringify(activeCustomer));
       delete copy.id;
-      stateAction('ADD_CUSTOMER', copy);
+      stateAction("ADD_CUSTOMER", copy);
     } else {
-      stateAction('UPDATE_CUSTOMER', activeCustomer);
+      stateAction("UPDATE_CUSTOMER", activeCustomer);
     }
-  }
+  };
 
   const clearForm = (event) => {
     event.preventDefault();
-    stateAction('SET_ACTIVE_CUSTOMER',{ id: -1, firstName: '', lastName: '', email: ''});
-  }
+    stateAction("RESET_ACTIVE_CUSTOMER");
+  };
 
   const linkCompanyToCustomer = () => {
-    stateAction('LINK_COMPANY_TO_CUSTOMER');
-  }
+    stateAction("LINK_COMPANY_TO_CUSTOMER");
+    // The following was removed because it was too heavy-handed
+    // Refer to LINK_COMPANY_TO_CUSTOMER in the AppReducer for more info.
+    // stateAction("GET_COMPANIES");
+    // stateAction("GET_CUSTOMERS");
+  };
 
   return (
+    <Container style={{ paddingRight: 0, paddingLeft: 0  }}>
+      <Row>
+        <Col xs={12}>
+          <h3>Customer Details</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <Form onSubmit={handleSubmit}>
+            <Form.Control type="hidden" value={id} readOnly />
+            <Form.Group controlId="firstName">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={firstName}
+                onChange={(event) => setParam("firstName", event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="lastName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={lastName}
+                onChange={(event) => setParam("lastName", event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                value={email}
+                onChange={(event) => setParam("email", event.target.value)}
+              />
+            </Form.Group>
 
-    <div className="col-6 align-items-center justify-content-center px-2">
-        <h3 className="text-center">Details:</h3>
-        <div>
-          <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate>
+            <Button size="sm" variant="primary" type="submit">
+              <FaSave />
+            </Button>
+            <Button size="sm" variant="secondary" type="button" onClick={clearForm}>
+              <BsTrash />
+            </Button>
+            <Button size="sm"
+              variant="secondary"
+              type="button"
+              onClick={linkCompanyToCustomer}
+            >
+              <BsLink45Deg />
+            </Button>
+          </Form>
+        </Col>
 
-            <input type="hidden" id="id" name="id" value={id}/>
-            <div className="col-md-4">
-              <label htmlFor="firstName" className="form-label">First Name</label>
-              <input type="text" className="form-control" id="firstName" value={firstName} onChange={(e) => setParam('firstName', e.target.value)} required />
-              <div className="valid-feedback">
-                Looks good!
-              </div>
-            </div>
-            <div className="col-md-4">
-              <label htmlFor="lastName" className="form-label">Last name</label>
-              <input type="text" className="form-control" id="lastName" value={lastName} onChange={(e) => setParam('lastName', e.target.value)} required />
-              <div className="valid-feedback">
-                Looks good!
-              </div>
-            </div>
-            <div className="col-md-4">
-              <label htmlFor="email" className="form-label">Email</label>
-                <input type="email" className="form-control" id="email" value={email} onChange={(e) => setParam('email', e.target.value)} required />
-                <div className="invalid-feedback">
-                  Please enter your email.
-                </div>
-            </div>
-            <div className="col-12">
-              <div className="form-check">
-                <input className="form-check-input" type="checkbox" value="" id="invalidCheck" required />
-                <label className="form-check-label" htmlFor="invalidCheck">
-                  Agree to terms and conditions
-                </label>
-                <div className="invalid-feedback">
-                  You must agree before submitting.
-                </div>
-              </div>
-            </div>
-            <div className="col-12">
-              <button className="btn btn-danger" onClick={clearForm}>New</button>
-              <button className="btn btn-primary" type="submit">Save</button>
-              <button className="btn btn-primary" onClick={linkCompanyToCustomer}>Link</button>
-            </div>
-          </form>
-        </div>
-      </div>
-  )
-}
+        <Col xs={6}>
+        <Form.Label>Linked Companies</Form.Label>
+          <ul>
+            {activeCustomer.companies && activeCustomer.companies.map((company) => (
+              <li key={company.id}>{company.name}</li>
+            ))}
+          </ul>
+        </Col>
+      </Row>
+    </Container>
+  );
+};

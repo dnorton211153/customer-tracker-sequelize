@@ -1,5 +1,9 @@
 import React, {useContext, useEffect} from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import { Container, Row, Col, Form, Button  } from 'react-bootstrap';
+import { FaEdit } from 'react-icons/fa';
+import { SiMinutemailer }  from 'react-icons/si';
+import { FiDelete } from 'react-icons/fi';
 
 export const CustomerList = () => {
 
@@ -21,28 +25,27 @@ export const CustomerList = () => {
 
   useEffect(() => {
     stateAction('GET_CUSTOMERS', null);
-    // Handle infinite loop (???)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="col-6 align-items-center px-2">
-      <h3 className="text-center">List:</h3>
+      <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Row>
+          <Col xs={12}>
+            <h3>Customer List</h3>
+          </Col>
+        </Row>
 
-        <label htmlFor="firstName" className="form-label">Customer List</label>
-        <div className="list-group">
-          {customers.map(customer => ( 
-
-            <div key={customer.id} className="d-flex flex-row list-group-item">
-                <div className="col-7">{customer.firstName} {customer.lastName}</div>
-                <div className="col-2" role="button" onClick={(e) => editCustomer(customer)}><span className="badge bg-secondary rounded-pill noClick"><i className="fa fa-edit noClick" aria-hidden="true"></i></span></div>
-                <div className="col-2" role="button" onClick={(e) => emailCustomer(customer)}><span className="badge bg-primary rounded-pill noClick"><i className="fa fa-send noClick" aria-hidden="true"></i></span></div>
-                <div className="col-1" role="button" onClick={(e) => deleteCustomer(customer.id)}><span className="badge bg-danger rounded-pill noClick"><i className="fa fa-times noClick" aria-hidden="true"></i></span></div>
-            </div>
-          ))}
-            
-        </div>
-    </div>
+        {customers.map(customer => ( 
+          <Row key={customer.id}>
+            <Col xs={6}><Form.Label>{customer.firstName} {customer.lastName}</Form.Label></Col>
+            <Col xs={6} style={{ paddingLeft: 0, paddingRight: 0 }}>
+              <Button size="sm" variant="primary" onClick={() => editCustomer(customer)}><FaEdit /></Button>
+              <Button size="sm" variant="danger" onClick={() => deleteCustomer(customer.id)}><FiDelete /></Button>
+              <Button size="sm" variant="success" onClick={() => emailCustomer(customer)}><SiMinutemailer /></Button>
+            </Col>
+          </Row>
+        ))}
+      </Container>
   )
 }
 

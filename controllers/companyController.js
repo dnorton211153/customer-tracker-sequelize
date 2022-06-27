@@ -120,10 +120,9 @@ exports.updateCompany = async (req,res,next) => {
                 error: 'No company found'
             })
         } else {
-
-            Object.entries(req.body).forEach(([key,value]) => {
-                company[key] = value;
-            })
+            for (const [key, value] of Object.entries(req.body)) {
+                    company[key] = value;
+            }
 
             await company.save();
             return res.status(200).json({

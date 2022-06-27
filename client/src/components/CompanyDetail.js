@@ -1,5 +1,8 @@
 import React, {useContext} from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { BsTrash } from "react-icons/bs";
+import { FaSave } from "react-icons/fa";
 
 export const CompanyDetail = () => {
 
@@ -27,41 +30,47 @@ export const CompanyDetail = () => {
 
   const clearForm = (event) => {
     event.preventDefault();
-    stateAction('SET_ACTIVE_COMPANY',{ id: -1, name: ''});
+    stateAction('RESET_ACTIVE_COMPANY');
   }
 
   return (
 
-    <div className="col-6 align-items-center justify-content-center px-2">
-        <h3 className="text-center">Details:</h3>
-        <div>
-          <form className="row g-3 needs-validation" onSubmit={handleSubmit} noValidate>
+    <Container style={{ paddingRight: 0, paddingLeft: 0 }}>
+      <Row>
+        <Col xs={12}>
+          <h3>Company Details</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <Form onSubmit={handleSubmit}>
+            <Form.Control type="hidden" value={id} readOnly />
+            <Form.Group controlId="name">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={name}
+                onChange={(event) => setParam("name", event.target.value)}
+              />
+            </Form.Group>
 
-            <input type="hidden" id="id" name="id" value={id}/>
-            <div className="col-md-12">
-              <label htmlFor="firstName" className="form-label">Company Name</label>
-              <input type="text" className="form-control" id="firstName" value={name} onChange={(e) => setParam('name', e.target.value)} required />
-              <div className="valid-feedback">
-                Looks good!
-              </div>
-            </div>
-            <div className="col-12">
-              <div className="form-check">
-                <input className="form-check-input" type="checkbox" value="" id="invalidCheck" required />
-                <label className="form-check-label" htmlFor="invalidCheck">
-                  Agree to terms and conditions
-                </label>
-                <div className="invalid-feedback">
-                  You must agree before submitting.
-                </div>
-              </div>
-            </div>
-            <div className="col-12">
-              <button className="btn btn-danger" onClick={clearForm}>New</button>
-              <button className="btn btn-primary" type="submit">Save</button>
-            </div>
-          </form>
-        </div>
-      </div>
+            <Button size="sm" variant="primary" type="submit">
+              <FaSave />
+            </Button>
+            <Button size="sm" variant="secondary" type="button" onClick={clearForm}>
+              <BsTrash />
+            </Button>
+          </Form>
+        </Col>
+        <Col xs={6}>
+        <Form.Label>Linked Customers</Form.Label>
+          <ul>
+            {activeCompany.customers && activeCompany.customers.map((customer) => (
+              <li key={customer.id}>{customer.firstName} {customer.lastName}</li>
+            ))}
+          </ul>
+        </Col>
+      </Row>
+    </Container>
   )
 }

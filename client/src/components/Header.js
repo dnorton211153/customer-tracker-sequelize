@@ -1,9 +1,13 @@
 import React from 'react'
+import { Form } from 'react-bootstrap'
 
 export const Header = () => {
   return (
+    <>
     <h2>
-      Norton's Customer Tracker
+      React-Sequelize-Context Demo
     </h2>
+    <Form.Label>@author Norton 2022</Form.Label>
+    </>
   )
 }

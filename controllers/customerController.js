@@ -6,7 +6,7 @@ exports.addCustomer = async (req,res,next) => {
     
     try {
         const { firstName, lastName, email } = req.body;
-        const customer = await Customer.create(req.body);
+        const customer = await Customer.create({ firstName, lastName, email });
         return res.status(201).json({
             success: true,
             data: customer
@@ -119,10 +119,9 @@ exports.updateCustomer = async (req,res,next) => {
                 error: 'No customer found'
             })
         } else {
-
-            Object.entries(req.body).forEach(([key,value]) => {
-                customer[key] = value;
-            })
+            for (const [key, value] of Object.entries(req.body)) {
+                    customer[key] = value;
+            }
 
             await customer.save();
             return res.status(200).json({

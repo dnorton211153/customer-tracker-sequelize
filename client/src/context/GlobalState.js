@@ -7,10 +7,13 @@ import axios from 'axios'
 //     { id: 1, firstName: 'Joe', lastName: 'Smith', email: 'joe@whatever.com' }
 // ]
 
+const emptyCustomer = { id: -1, firstName: '', lastName: '', email: '', companies: [] };
+const emptyCompany = { id: -1, name: '', customers: [] };
+
 // Initial state (customers would need to be loaded from the DB source)
 const initialState = {
-    activeCustomer: { id: -1, firstName: '', lastName: '', email: '' },
-    activeCompany: { id: -1, name: '' },
+    activeCustomer: emptyCustomer,
+    activeCompany: emptyCompany,
     customers: [],
     companies: [],
     loading: true
@@ -57,7 +60,11 @@ export const GlobalProvider = ({ children }) => {
                     break;
 
                 case 'SET_ACTIVE_CUSTOMER':
-                    payload = incoming;
+                    payload = incoming;     
+                    break;
+
+                case 'RESET_ACTIVE_CUSTOMER':
+                    payload = emptyCustomer;
                     break;
             
                 case 'GET_COMPANIES':
@@ -84,8 +91,13 @@ export const GlobalProvider = ({ children }) => {
                     payload = incoming;
                     break;
 
+                case 'RESET_ACTIVE_COMPANY':
+                    payload = emptyCompany;
+                    break;
+
                 case 'LINK_COMPANY_TO_CUSTOMER':
-                    response = await axios.post(`/api/companies/link`, { company_id: state.activeCompany.id, customer_id: state.activeCustomer.id }, config);
+                    await axios.post(`/api/companies/link`, { company_id: state.activeCompany.id, customer_id: state.activeCustomer.id }, config);
+                    payload = { activeCompany: state.activeCompany, activeCustomer: state.activeCustomer };
                     break;
 
                 default:
